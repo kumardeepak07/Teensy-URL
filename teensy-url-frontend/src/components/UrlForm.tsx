@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -10,11 +11,25 @@ export default function UrlForm() {
   const [shortUrl, setShortUrl] = useState("");
 
   const submit = async () => {
-    const res = await api.post("/shorten", {
+    try{
+      const res = await api.post("/shorten", {
       originalUrl: url,
       customAlias: alias || undefined,
-    });
-    setShortUrl(res.data.shortUrl);
+      });
+      if(res.status === 409 || res.status === 500){
+        setShortUrl(res.data.message);
+      }else{
+        setShortUrl(res.data.shortUrl);
+      }
+    }catch (error) {
+      const err = error as any;
+      if(err.status === 409){
+        setShortUrl("Custom alias already in use choose another one." );
+        return;
+      }
+      setShortUrl(err.response?.data?.message || "An error occurred" );
+    }
+    
   };
 
   return (

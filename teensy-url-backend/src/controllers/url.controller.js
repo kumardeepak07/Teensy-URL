@@ -6,6 +6,7 @@ exports.createShortUrl = async (req, res) => {
   const { originalUrl, customAlias, expiresInHours } = req.body;
 
   const shortCode = customAlias || generateShortCode();
+  
   const expiresAt = expiresInHours
     ? new Date(Date.now() + expiresInHours * 3600 * 1000)
     : null;

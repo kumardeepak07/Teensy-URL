@@ -11,7 +11,13 @@ export default function AnalyticsCard() {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await api.get(`/analytics/${code}`);
+      let shortCode = code;
+      if(code.includes(process.env.BASE_URL || "")) {
+        const url = new URL(code);
+        const pathname = url.pathname;
+        shortCode = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+      } 
+      const res = await api.get(`/analytics/${shortCode}`);
       setData(res.data);
       setError("");
     } catch {
