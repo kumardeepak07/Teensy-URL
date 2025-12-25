@@ -9,22 +9,25 @@ const app = express();
 const allowedOrigins =
   process.env.FRONTEND_URLS?.split(",") || [];
 
-const corsOptions = {
-  origin(origin, callback) {
-    if (!origin) return callback(null, true);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow non-browser requests
+      if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, origin); // 👈 important
+      }
 
-    return callback(new Error("CORS not allowed"), false);
-  },
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 204
-};
+      // IMPORTANT: still allow preflight to respond
+      return callback(null, false);
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204
+  })
+);
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 /**
