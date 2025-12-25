@@ -23,7 +23,7 @@ app.use(
       return callback(null, false);
     },
     methods: ["GET", "POST", "OPTIONS","HEAD","PUT","PATCH","DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["*"],
     optionsSuccessStatus: 204
   })
 );
