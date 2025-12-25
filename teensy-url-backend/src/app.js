@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
+const urlRoutes = require("./routes/url.routes");
+
 const app = express();
 
 const allowedOrigins =
@@ -9,7 +11,7 @@ const allowedOrigins =
 
 const corsOptions = {
   origin(origin, callback) {
-    if (!origin) return callback(null, true); // Postman / server-side
+    if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
@@ -22,8 +24,13 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
-app.use(cors(corsOptions)); // ✅ handles OPTIONS automatically
+app.use(cors(corsOptions));
 app.use(express.json());
+
+/**
+ * ✅ MOUNT ROUTES (THIS WAS MISSING)
+ */
+app.use("/", urlRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
