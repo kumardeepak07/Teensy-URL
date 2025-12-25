@@ -1,12 +1,15 @@
 import UrlForm from "@/components/UrlForm";
+import AnalyticsCard from "@/components/AnalyticsCard";
 
 export default function Home() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-center">
-        Fast & Simple URL Shortener
-      </h1>
-      <UrlForm />
+    <div className="space-y-8">
+     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+        <UrlForm />
+        <AnalyticsCard />
+      </div>
+
     </div>
   );
 }

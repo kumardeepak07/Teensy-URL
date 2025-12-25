@@ -18,7 +18,8 @@ export default function UrlForm() {
   };
 
   return (
-    <div className="bg-white p-6 rounded shadow space-y-4">
+    <div className="bg-white p-10 rounded-xl shadow-lg min-h-[420px] flex flex-col justify-between">
+
       <input
         className="w-full border p-2 rounded"
         placeholder="Enter long URL"
