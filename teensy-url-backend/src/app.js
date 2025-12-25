@@ -22,7 +22,7 @@ app.use(
       // IMPORTANT: still allow preflight to respond
       return callback(null, false);
     },
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "OPTIONS","HEAD","PUT","PATCH","DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     optionsSuccessStatus: 204
   })
