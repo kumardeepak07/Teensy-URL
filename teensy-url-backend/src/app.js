@@ -8,7 +8,7 @@ const allowedOrigins =
   process.env.FRONTEND_URLS?.split(",") || [];
 
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin(origin, callback) {
     if (!origin) return callback(null, true); // Postman / server-side
 
     if (allowedOrigins.includes(origin)) {
@@ -22,11 +22,7 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
-/**
- * ✅ THIS IS ENOUGH
- * DO NOT use app.options("*", ...)
- */
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // ✅ handles OPTIONS automatically
 app.use(express.json());
 
 app.get("/health", (req, res) => {
