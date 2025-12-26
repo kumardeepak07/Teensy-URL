@@ -1,14 +1,13 @@
 const redis = require("../config/redis");
 
 module.exports = async (req, res, next) => {
-  // CRITICAL: Always allow OPTIONS requests to pass through the rate limiter
-  // Browsers send OPTIONS before POST. If you rate-limit OPTIONS, the POST fails with a CORS error.
+  // CRITICAL: Skip rate limiting for OPTIONS requests
   if (req.method === "OPTIONS") {
     return next();
   }
 
   try {
-    const ip = req.headers["x-real-ip"] || req.ip; // Vercel specific IP check
+    const ip = req.headers["x-forwarded-for"] || req.ip; // Vercel IP detection
     const key = `rate:${ip}`;
 
     const count = await redis.incr(key);
@@ -17,14 +16,12 @@ module.exports = async (req, res, next) => {
     }
 
     if (count > 100) {
-      // The global CORS middleware has already set the headers, 
-      // so this JSON response will be accepted by the browser.
       return res.status(429).json({ message: "Too many requests" });
     }
 
     next();
   } catch (error) {
-    console.error("Rate Limiter Error:", error);
-    next(); // Don't block users if Redis is down
+    console.error("Redis Error:", error);
+    next(); // Don't block the user if Redis is down
   }
 };

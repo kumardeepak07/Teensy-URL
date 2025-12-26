@@ -5,27 +5,38 @@ const urlRoutes = require("./routes/url.routes");
 
 const app = express();
 
-// 1. Properly parse origins (removing spaces)
+// 1. Clean and parse origins
 const allowedOrigins = process.env.FRONTEND_URLS 
   ? process.env.FRONTEND_URLS.split(",").map(o => o.trim()) 
   : [];
 
-// 2. Use ONE CORS configuration
-const allowedOrigin = "https://teensy-url-pbt3.vercel.app";
-
-app.use(cors({
-  origin: allowedOrigin,
-  methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  credentials: true,
-  optionsSuccessStatus: 200 
-}));
+// 2. Use ONLY the CORS package with these specific settings
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like Postman/mobile)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.error(`CORS blocked for origin: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+    credentials: true,
+    optionsSuccessStatus: 200 // CRITICAL for Vercel preflight checks
+  })
+);
 
 app.use(express.json());
 
-// 3. Mount Routes
+// 3. Mount routes
 app.use("/", urlRoutes);
 
+// Health check
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
