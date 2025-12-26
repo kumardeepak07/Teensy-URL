@@ -17,9 +17,6 @@ Teensy-URL/
 ├── teensy-url-backend/ # Backend API (Node.js / Express / similar)
 └── README.md
 
-markdown
-Copy code
-
 ## ✨ Features
 
 - 🚀 Shorten long URLs
