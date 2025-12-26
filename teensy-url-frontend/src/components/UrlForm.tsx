@@ -11,30 +11,28 @@ export default function UrlForm() {
   const [shortUrl, setShortUrl] = useState("");
 
   const submit = async () => {
-    try{
+    try {
       const res = await api.post("/shorten", {
-      originalUrl: url,
-      customAlias: alias || undefined,
+        originalUrl: url,
+        customAlias: alias || undefined,
       });
-      if(res.status === 409 || res.status === 500){
+      if (res.status === 409 || res.status === 500) {
         setShortUrl(res.data.message);
-      }else{
+      } else {
         setShortUrl(res.data.shortUrl);
       }
-    }catch (error) {
+    } catch (error) {
       const err = error as any;
-      if(err.status === 409){
-        setShortUrl("Custom alias already in use choose another one." );
+      if (err.status === 409) {
+        setShortUrl("Custom alias already in use choose another one.");
         return;
       }
-      setShortUrl(err.response?.data?.message || "An error occurred" );
+      setShortUrl(err.response?.data?.message || "An error occurred");
     }
-    
   };
 
   return (
     <div className="bg-white p-10 rounded-xl shadow-lg min-h-[420px] flex flex-col justify-between">
-
       <input
         className="w-full border p-2 rounded"
         placeholder="Enter long URL"

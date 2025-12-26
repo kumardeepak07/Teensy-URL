@@ -1,7 +1,6 @@
 const express = require("express");
 const rateLimiter = require("../middleware/rateLimiter");
 const controller = require("../controllers/url.controller");
-
 const router = express.Router();
 
 router.post("/shorten", rateLimiter, controller.createShortUrl);

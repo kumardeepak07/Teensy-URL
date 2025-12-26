@@ -12,11 +12,11 @@ export default function AnalyticsCard() {
   const fetchAnalytics = async () => {
     try {
       let shortCode = code;
-      if(code.includes(process.env.BASE_URL || "")) {
+      if (code.includes(process.env.BASE_URL || "")) {
         const url = new URL(code);
         const pathname = url.pathname;
-        shortCode = pathname.startsWith('/') ? pathname.slice(1) : pathname;
-      } 
+        shortCode = pathname.startsWith("/") ? pathname.slice(1) : pathname;
+      }
       const res = await api.get(`/analytics/${shortCode}`);
       setData(res.data);
       setError("");
@@ -28,7 +28,6 @@ export default function AnalyticsCard() {
 
   return (
     <div className="bg-white p-10 rounded-xl shadow-lg min-h-[420px] flex flex-col justify-between">
-
       <h2 className="text-xl font-semibold">📊 Analytics</h2>
 
       <input
@@ -49,8 +48,12 @@ export default function AnalyticsCard() {
 
       {data && (
         <div className="bg-gray-100 p-4 rounded space-y-1">
-          <p><b>Clicks:</b> {data.click_count}</p>
-          <p><b>Last Accessed:</b> {data.last_accessed}</p>
+          <p>
+            <b>Clicks:</b> {data.click_count}
+          </p>
+          <p>
+            <b>Last Accessed:</b> {data.last_accessed}
+          </p>
         </div>
       )}
     </div>
