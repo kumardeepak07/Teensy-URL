@@ -6,27 +6,41 @@ const urlRoutes = require("./routes/url.routes");
 
 const app = express();
 
-const allowedOrigins =
-  process.env.FRONTEND_URLS?.split(",") || [];
+const allowedOrigins = process.env.FRONTEND_URLS?.split(",") || [];
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow non-browser requests
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
       if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, origin); // 👈 important
+      
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        // Instead of false, you can also allow it but the browser will block it
+        // Or strictly block it here.
+        callback(new Error("Not allowed by CORS"));
       }
-
-      // IMPORTANT: still allow preflight to respond
-      return callback(null, false);
     },
-    methods: ["GET", "POST", "OPTIONS","HEAD","PUT","PATCH","DELETE"],
-    allowedHeaders: ["*"],
-    optionsSuccessStatus: 204
+    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+    credentials: true,
   })
 );
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+  
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+  next();
+});
+
 
 app.use(express.json());
 
