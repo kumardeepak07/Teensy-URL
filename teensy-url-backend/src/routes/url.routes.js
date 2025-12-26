@@ -4,7 +4,7 @@ const controller = require("../controllers/url.controller");
 
 const router = express.Router();
 
-router.post("/shorten", controller.createShortUrl);
+router.post("/shorten", rateLimiter, controller.createShortUrl);
 router.get("/analytics/:shortCode", controller.analytics);
 router.get("/:shortCode", controller.redirect);
 
