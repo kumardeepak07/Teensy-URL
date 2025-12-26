@@ -11,20 +11,14 @@ const allowedOrigins = process.env.FRONTEND_URLS
   : [];
 
 // 2. Use ONE CORS configuration
+const allowedOrigin = "https://teensy-url-pbt3.vercel.app";
+
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow non-browser requests
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: allowedOrigin,
   methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,
-  optionsSuccessStatus: 200 // Essential for Vercel/legacy browsers
+  optionsSuccessStatus: 200 
 }));
 
 app.use(express.json());
