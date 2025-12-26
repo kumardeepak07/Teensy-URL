@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('@dotenvx/dotenvx').config();
 const express = require("express");
 const cors = require("cors");
 const urlRoutes = require("./routes/url.routes");
