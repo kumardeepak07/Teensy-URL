@@ -2,7 +2,7 @@
 
 A **full-stack URL shortening web application** with frontend and backend components.
 
-Live demo: [https://teensy-url-pbt3.vercel.app](Teensy-URL)
+Live demo: [Teensy-URL](https://teensy-url-pbt3.vercel.app)
 
 ## 🚀 About
 
